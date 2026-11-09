@@ -8,7 +8,11 @@ require_command curl
 ensure_cluster
 
 # Deliberately external to the lab Compose project to retain incident history.
-podman volume create valkey-resilience-lab-betterdb-pgdata >/dev/null
+BETTERDB_VOLUME="valkey-resilience-lab-betterdb-pgdata"
+
+if ! podman volume exists "$BETTERDB_VOLUME"; then
+  podman volume create "$BETTERDB_VOLUME" >/dev/null
+fi
 monitor_compose=("${COMPOSE[@]}" -f "${LAB_ROOT}/docker-compose.betterdb.yml" --profile betterdb)
 "${monitor_compose[@]}" up -d betterdb
 

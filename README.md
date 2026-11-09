@@ -26,6 +26,8 @@ Use [RESILIENCE_TESTS.md](RESILIENCE_TESTS.md) for the complete command catalog,
 
 For a historical Valkey monitoring dashboard, opt in to BetterDB Monitor and its PostgreSQL history store. It joins the existing Compose `bench` network and auto-registers cluster nodes, without replacing the lab's one-second CSV collectors. See [docs/betterdb.md](docs/betterdb.md) for installation, persistence and test interpretation.
 
+For the verified macOS/Podman startup, shutdown, health checks and persistent-data guidance, see the [Podman runbook](docs/PODMAN-RUNBOOK.md).
+
 ```bash
 make up
 make betterdb-up

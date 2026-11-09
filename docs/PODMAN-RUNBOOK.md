@@ -60,6 +60,33 @@ The routine workflow is:
 
 The cluster uses all 16,384 hash slots.
 
+### Stable Podman network addresses
+
+The six core Valkey nodes use fixed addresses on the Compose `bench` network:
+
+| Node | Address |
+|---|---|
+| valkey-1 | `10.89.0.2` |
+| valkey-2 | `10.89.0.3` |
+| valkey-3 | `10.89.0.4` |
+| valkey-4 | `10.89.0.5` |
+| valkey-5 | `10.89.0.6` |
+| valkey-6 | `10.89.0.7` |
+
+The network uses the explicitly configured subnet `10.89.0.0/24`.
+
+This is important because Valkey persists cluster membership and peer addresses in each node's `nodes.conf` file. If Podman recreates the network and assigns different addresses, the persisted cluster configuration can refer to stale peer addresses. Nodes may then fail to communicate or replicas may fail to reconnect.
+
+**Operational guidance:**
+
+- Keep the subnet and the six node addresses consistent across restarts.
+- Do not change these addresses on an already initialized cluster without planning a cluster reconfiguration.
+- Routine startup and shutdown should use the existing containers and persistent volumes.
+- Do not delete Valkey volumes or `nodes.conf` files to address a networking problem.
+
+BetterDB's PostgreSQL history is stored separately in the persistent volume `valkey-resilience-lab-betterdb-pgdata`. The startup script checks whether this volume already exists before creating it, so repeated `make betterdb-up` runs do not require deleting or recreating the volume.
+
+
 ---
 
 ## 3. Prerequisites
